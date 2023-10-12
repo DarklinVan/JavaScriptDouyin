@@ -1,14 +1,14 @@
 ﻿const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
-
+const path = require('path');
 // 添加body-parser中间件
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-const PORT = 3000; // 使用环境变量中的端口，或者默认使用 3000
+const PORT = process.env.PORT || 3000; // 使用环境变量中的端口，或者默认使用 3000
 
 app.post('/video', async (req, res) => {
     const urls = req.body.urls;
@@ -27,7 +27,7 @@ app.post('/video', async (req, res) => {
     }
 });
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 function getID(text) {
     const pattern = /\/(\d+)\//;

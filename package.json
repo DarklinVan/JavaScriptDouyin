@@ -1,10 +1,10 @@
 {
   "name": "jsdy",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "JSDy",
   "main": "server.js",
   "author": {
-    "name": ""
+    "name": "DarklinVan"
   },
   "devDependencies": {
     "eslint": "^8.21.0"
