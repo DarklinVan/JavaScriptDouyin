@@ -1,21 +1,33 @@
 ﻿# JavaScript for Douyin
-一个用Node.js写的简易抖音视频连接解析器
-采用MIT协议,支持部署到Vercel
-[Demo网址](https://java-script-douyin.vercel.app/)
-内含简易的UI网页
-调用接口链接为/video，使用POST协议
+
+这是一个使用 Node.js 编写的简易抖音视频链接解析器。
+
+采用 MIT 协议，支持部署到 Vercel。
+
+[Vercel Demo 网址](https://java-script-douyin.vercel.app/)
+
+内含简易的 UI 网页。
+
+调用接口链接为 `/video`，使用 POST 协议。
+
 ## 输入参数
-1."urls"
-抖音的分享链接，如https://v.douyin.com/idSKrkhssG/
-支持同时输入多个，用","隔开
+
+1. urls:
+   - 抖音的分享链接，例如：https://v.douyin.com/idSKrkhssG/
+   - 支持同时输入多个，用逗号隔开。
+   - 例如 ```urls=https://v.douyin.com/idSKrkhssG/```
+
 ## 返回数据样例
-- 成功获取
-其中，success为是否获取成功
-status是状态文本
-video_list是包含了成功获取的视频链接的列表
-desc是视频简介（文案）
-video_count是成功获取到的视频数量
-```
+
+### 成功获取
+
+- `success` 为是否获取成功。
+- `status` 是状态文本。
+- `video_list` 是包含了成功获取的视频链接的列表。
+- `desc` 是视频简介（文案）。
+- `video_count` 是成功获取到的视频数量。
+
+```json
 {
     "success": true,
     "status": "OK",
@@ -29,8 +41,8 @@ video_count是成功获取到的视频数量
     "video_count": 1
 }
 ```
-- 获取失败
-```
+### 获取失败
+```json
 {
     "success": false,
     "status": "输入的所有url都无效",
