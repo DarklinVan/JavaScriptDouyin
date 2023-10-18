@@ -2,6 +2,7 @@
 const bodyParser = require('body-parser');
 const request = require('request');
 const path = require('path');
+const morgan = require('morgan');
 
 // 创建一个 Express 应用
 const app = express();
@@ -12,6 +13,8 @@ app.use(bodyParser.json());
 
 // 确定端口号，从环境变量中获取，如果没有则默认使用 3000 端口
 const PORT = process.env.PORT || 3000;
+
+app.use(morgan(':custom'));
 
 // 处理 POST 请求，路由为 '/video'
 app.post('/video', async (req, res) => {
@@ -47,6 +50,15 @@ function getID(text) {
 
     return match ? match[1] : "";
 }
+
+
+// 自定义日志格式
+morgan.token('custom', (req, res) => {
+    const { method, url, body, query } = req;
+    const { statusCode, statusMessage } = res;
+    const now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''); // 缩短时间格式
+    return `${now} - Client: ${req.ip} - Method: ${method} - URL: ${url} - Body: ${JSON.stringify(body)} - Query: ${JSON.stringify(query)} - Status: ${statusCode} ${statusMessage}`;
+});
 
 // 发起 HTTP 请求并返回页面内容的 Promise
 function openPage(url, ar = true) {

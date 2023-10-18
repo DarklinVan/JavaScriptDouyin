@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    /* 设置页面背景颜色为浅灰色 */
+}
+
+.title {
+    margin: 20px 0;
+}
+
+.mainBody {
+    margin: 0 auto;
+    text-align: center;
+    background-color: #fff;
+    /* 设置主体背景颜色为白色 */
+    border: 1px solid #ccc;
+    /* 添加边框 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* 添加阴影 */
+    padding: 20px;
+    border-radius: 10px;
+    /* 圆角边框 */
+    max-width: 800px;
+    /* 最大宽度 */
+    margin-bottom: 20px;
+    overflow: auto;
+    /* 当内容溢出时显示滚动条 */
+}
+
+.formBody {
+    margin-bottom: 20px;
+}
+
+.videoBody {
+    margin-top: 20px;
+    position: relative;
+    /* 为了相对定位内部元素 */
+    padding-bottom: 56.25%;
+    /* 16:9 的宽高比 */
+}
+
+.videoBody video {
+    margin: 10px 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+}
+
+.foot {
+    background-color: #fff;
+    /* 设置导航栏背景颜色为白色 */
+    color: #333;
+    /* 设置导航栏文字颜色为黑色 */
+    padding: 10px 0;
+    font-size: 12px;
+    /* 调整字体大小 */
+    border-top: 1px solid #ccc;
+    /* 添加上边框线 */
+}
+
+.foot span {
+    margin: 0 10px;
+}
+
+.videoList {
+    margin-top: 20px;
+}
+
+.videoList h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#videoListUl {
+    list-style-type: none;
+    padding: 0;
+}
+
+#videoListUl li {
+    margin-bottom: 10px;
+}
+
+#videoListUl li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+#videoListUl li a:hover {
+    color: #007bff;
+}

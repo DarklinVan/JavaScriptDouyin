@@ -1,97 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+
 <head>
     <meta charset="utf-8" />
     <meta name=referrer content=no-referrer>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>DY Download</title>
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0; /* 设置页面背景颜色为浅灰色 */
-        }
-
-        .title {
-            margin: 20px 0;
-        }
-
-        .mainBody {
-            margin: 0 auto;
-            text-align: center;
-            background-color: #fff; /* 设置主体背景颜色为白色 */
-            border: 1px solid #ccc; /* 添加边框 */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-            padding: 20px;
-            border-radius: 10px; /* 圆角边框 */
-            max-width: 800px; /* 最大宽度 */
-            margin-bottom: 20px;
-            overflow: auto; /* 当内容溢出时显示滚动条 */
-        }
-
-        .formBody {
-            margin-bottom: 20px;
-        }
-
-        .videoBody {
-            margin-top: 20px;
-            position: relative; /* 为了相对定位内部元素 */
-            padding-bottom: 56.25%; /* 16:9 的宽高比 */
-        }
-
-            .videoBody video {
-                margin: 10px 0;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                max-width: 100%;
-            }
-
-        .foot {
-            background-color: #fff; /* 设置导航栏背景颜色为白色 */
-            color: #333; /* 设置导航栏文字颜色为黑色 */
-            padding: 10px 0;
-            font-size: 12px; /* 调整字体大小 */
-            border-top: 1px solid #ccc; /* 添加上边框线 */
-        }
-
-            .foot span {
-                margin: 0 10px;
-            }
-
-        .videoList {
-            margin-top: 20px;
-        }
-
-            .videoList h2 {
-                font-size: 1.5em;
-                margin-bottom: 10px;
-            }
-
-        #videoListUl {
-            list-style-type: none;
-            padding: 0;
-        }
-
-            #videoListUl li {
-                margin-bottom: 10px;
-            }
-
-                #videoListUl li a {
-                    text-decoration: none;
-                    color: #333;
-                    font-weight: bold;
-                }
-
-                    #videoListUl li a:hover {
-                        color: #007bff;
-                    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <script src="js/script.js"></script>
 </head>
+
 <body>
     <div class="title">
         <h1>JavaScript Douyin</h1>
@@ -117,59 +37,12 @@
         </div>
         <div class="foot">
             <span>作者：DarklinVan</span>
-            <span>GitHub仓库：<a href="https://github.com/DarklinVan/JavaScriptDouyin">https://github.com/DarklinVan/JavaScriptDouyin</a></span>
-            <span>版本号：0.0.1</span>
+            <span>GitHub仓库：<a
+                    href="https://github.com/DarklinVan/JavaScriptDouyin">https://github.com/DarklinVan/JavaScriptDouyin</a></span>
+            <span>版本号：0.0.2</span>
         </div>
     </div>
 
 </body>
+
 </html>
-<script>
-    $(document).ready(function () {
-        // 当表单提交时触发事件
-        $('#videoPostForm').submit(function (event) {
-            // 阻止默认的表单提交行为
-            event.preventDefault();
-
-            // 获取表单数据
-            var formData = decodeURIComponent($('#videoPostForm').serialize());
-            var urls = formData.match(/https:\/\/v\.douyin\.com\/[a-zA-Z0-9]+\/?/g);
-
-            if (urls) {
-                var cUrl = urls.join(",");
-                $.ajax({
-                    type: 'POST',
-                    url: '/video',
-                    data: { urls: cUrl },
-                    dataType: "json",
-                    success: function (js) {
-                        if (js["video_count"] == 1) {
-                            videoUrl = js["video_list"][0]["videoUrl"];
-                            $("#player").attr("src", videoUrl);
-                        }
-                        else if (js["video_count"] > 1) {
-                            // 处理多个视频的情况
-                        }
-                        js["video_list"].forEach(function(url) {
-                        var decodedUrl = url["videoUrl"]
-                        $('#videoListUl').append('<li><a href="' + decodedUrl + '" download>下载视频</a> - ' + decodedUrl + '</li>');
-                    });
-                        // 显示处理结果，添加成功样式类
-                        $('.result').removeClass('error').addClass('success').html('处理完成').show();
-                    },
-                    error: function (error) {
-                        console.error(error);
-
-                        // 显示错误信息，添加失败样式类
-                        $('.result').removeClass('success').addClass('error').html('处理出错，请重试').show();
-                    }
-                });
-            } else {
-                console.log("没有匹配到链接");
-
-                // 显示没有匹配到链接的信息，添加失败样式类
-                $('.result').removeClass('success').addClass('error').html('没有匹配到链接').show();
-            }
-        });
-    });
-</script>
