@@ -1,8 +1,7 @@
 ﻿# JavaScript for Douyin
 
 这是一个使用 Node.js 编写的简易抖音视频链接解析器。
-
-采用 MIT 协议，支持部署到 Vercel。
+仅供学习交流使用，请勿用于其他用途。
 
 [Vercel Demo 网址](https://java-script-douyin.vercel.app/)
 

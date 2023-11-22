@@ -16,24 +16,25 @@ const PORT = process.env.PORT || 3000;
 
 app.use(morgan(':custom'));
 
-// 处理 POST 请求，路由为 '/video'
-app.post('/video', async (req, res) => {
+// 处理 POST 请求，路由为 '/parse'
+app.post('/parse', async (req, res) => {
     const urls = req.body.urls;
     if (!urls) {
         return res.status(400).json({ success: false, status: 'Bad Request - 缺少 urls 参数' });
     }
 
-    const urlsArray = urls.split(',');
+   
 
     try {
-        const video_list = await processVideoLinks(urlsArray);
-        if (video_list["video_count"] == 0) {
-            res.json({ success: false, status: '输入的所有url都无效', video_list, video_count: video_list.length });
+        const urlsArray = urls.split(',');
+        const itemList = await processItemLinks(urlsArray);
+        if (itemList["video_count"] == 0) {
+            res.json({ success: false, status: '输入的所有url都无效', itemList, count: itemList.length });
         }
         else {
-            res.json({ success: true, status: 'OK', video_list, video_count: video_list.length });
+            res.json({ success: true, status: 'OK', itemList, count: itemList.length });
         }
-        
+
     } catch (error) {
         console.error(`处理视频链接时出错: ${error.message}`);
         res.status(500).json({ success: false, status: '服务器内部错误' });
@@ -43,7 +44,7 @@ app.post('/video', async (req, res) => {
 // 使用 Express 提供的静态文件中间件，将 'public' 文件夹设置为静态资源路径
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 从 URL 中提取视频ID
+// 从 URL 中提取 ID
 function getID(text) {
     const pattern = /\/(\d+)\//;
     const match = text.match(pattern);
@@ -78,43 +79,62 @@ function openPage(url, ar = true) {
     });
 }
 
-// 处理视频链接数组
-async function processVideoLinks(videoLinks) {
-    const video_list = [];
+// 处理链接数组
+async function processItemLinks(itemLinks) {
+    const itemLists = [];
 
-    for (const videoLink of videoLinks) {
-        const videoUrl = videoLink.trim();
-        if (!videoUrl) {
-            continue; // 跳过空的 videoLink
+    for (const itemLink of itemLinks) {
+        const itemUrl = itemLink.trim();
+        if (!itemUrl) {
+            continue; // 跳过空的 Link
         }
-
         try {
-            const uuid = getID(await openPage(videoUrl, false));
+            const uuid = getID(await openPage(itemUrl, false));
 
             if (!uuid) {
-                console.error(`ID - ${videoUrl}`);
-                continue; // 跳过没有ID的视频
+                console.error(`ID - ${itemUrl}`);
+                continue; // 跳过没有ID的
             }
 
             const itemInfoResponse = await openPage(`https://www.douyin.com/web/api/v2/aweme/iteminfo/?reflow_source=reflow_page&item_ids=${uuid}&a_bogus=666666666`);
-            const itemInfo = JSON.parse(itemInfoResponse).item_list[0];
-            const videoId = itemInfo.video.play_addr.uri;
-            const finalVideoUrl = `https://aweme.snssdk.com/aweme/v1/play/?video_id=${videoId}`;
-            const desc = itemInfo.desc;
-            video_list.push({
-                videoUrl: finalVideoUrl,
-                videoId: parseInt(uuid),
-                desc
-            });
+            const itemList = JSON.parse(itemInfoResponse).item_list[0];
+            const desc = itemList.desc;
+            if (itemList.images) {
+                const imgList = []
+                for (const item of itemList.images) {
+                    imgList.push({
+                        url: item.url_list[3],
+                        height: item.height,
+                        width: item.width,
+                    })
+                }
+                itemLists.push({
+                    type:1,
+                    imgs: imgList,
+                    itemId: parseInt(uuid),
+                    desc
+                })
+            } else {
+                const itemId = itemList.video.play_addr.uri;
+                const finalItemUrl = `https://aweme.snssdk.com/aweme/v1/play/?video_id=${itemId}`;
+                
+                itemLists.push({
+                    type:0,
+                    url: finalItemUrl,
+                    itemId: parseInt(uuid),
+                    desc
+                });
+            }
+
         } catch (error) {
-            console.error(`处理视频链接时出错 - ${videoUrl}: ${error.message}`);
-            video_list.push({
-                error: `处理视频链接时出错 - ${videoUrl}: ${error.message}`
+            console.error(`处理视频链接时出错 - ${itemUrl}: ${error.message}`);
+            itemLists.push({
+                error: `处理视频链接时出错 - ${itemUrl}: ${error.message}`
             });
         }
     }
 
-    return video_list;
+    return itemLists;
 }
 
 // 监听指定端口
